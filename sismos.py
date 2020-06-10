@@ -49,7 +49,7 @@ if __name__ == '__main__':
     parser.add_argument("-n","--num_restarts", type=int, default=4, help="Number of times that we try to restart")
     parser.add_argument("-s","--scale_factor", type=float, default=50, help="to avoid numerical instability")
     
-    parser.add_argument("-e","--error", type=str, default="l1", help="either use l1, smoothl1 or l2")
+    parser.add_argument("-e","--error", type=str, default="L2", help="either use L1, L2, or smoothL1")
     parser.add_argument("-p","--pop_size", type=int, default=50, help="Population size for diff evo")
     
     parser.add_argument("-c","--try_with_cuda", type=str, default="false", help="Use cuda (if available)")
