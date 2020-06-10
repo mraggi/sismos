@@ -19,7 +19,7 @@ def pairwise_dist2_batch(x):
 
     e = torch.exp(norms)[...,None]
     eT = e.permute((0,2,1))
-    W = torch.log(e@eT + 1e-8)
+    W = torch.log(e@eT + 1e-14)
     return W-2*xy
 
 def l1_batch(x,A,smooth=False):
@@ -45,8 +45,8 @@ if __name__ == '__main__':
 
     
     
-    parser.add_argument("-t","--time", type=float, default=6, help="Number of seconds to spend finding a good solution (per restart)")
-    parser.add_argument("-n","--num_restarts", type=int, default=6, help="Number of times that we try to restart")
+    parser.add_argument("-t","--time", type=float, default=4, help="Number of seconds to spend finding a good solution (per restart)")
+    parser.add_argument("-n","--num_restarts", type=int, default=4, help="Number of times that we try to restart")
     parser.add_argument("-s","--scale_factor", type=float, default=50, help="to avoid numerical instability")
     
     parser.add_argument("-e","--error", type=str, default="l1", help="either use l1, smoothl1 or l2")
@@ -78,11 +78,11 @@ if __name__ == '__main__':
         print("NOT using CUDA!")
     
     best_x = None
-    best_cost = 1e9
+    best_cost = 1e15
     
     for epoch in range(args.num_restarts):
         print(f"\n\n Epoch {epoch+1}/{args.num_restarts}:")
-        initial_pop = torch.randn(args.pop_size, A.shape[1], 2).double()
+        initial_pop = 2*torch.randn(args.pop_size, A.shape[1], 2).double()
         
         if epoch > 0: initial_pop[0] = best_x
 
