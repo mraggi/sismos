@@ -34,7 +34,8 @@ def l2_batch(x,A):
     return torch.mean(D*D,dim=(1,2))
 
 def clamp(x):
-    mask = (x > 5.0) + (x < -5.0)
+    #x -= x.mean(dim=0)*0.9
+    mask = (x > 4.0) + (x < -4.0)
     x[mask] = torch.randn_like(x[mask])*2
     return x
 
@@ -68,7 +69,7 @@ if __name__ == '__main__':
 
     D = torch.tensor(np.loadtxt(args.matrix, delimiter=" ")).double()
     
-    scale = D.mean()
+    scale = D.max()/2
     
     M = D/scale
     
