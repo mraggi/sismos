@@ -19,19 +19,6 @@ def pairwise_dist_sq(P,Q):
     R *= R
     return R.sum(dim=-1)
 
-#def pairwise_dist2_batch(x):
-    #x = x.double() # numerical stability
-    #xt = x.permute((0,2,1))
-    #xy = x@xt
-    
-    #sq = (x*x)
-    #norms = sq[...,0] + sq[...,1]
-
-    #e = torch.exp(norms)[...,None]
-    #eT = e.permute((0,2,1))
-    #W = torch.log(e@eT + 1e-14)
-    #return W-2*xy
-
 def pairwise_dist2_batch(x):
     return pairwise_dist_sq(x,x)
 
