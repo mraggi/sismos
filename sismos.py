@@ -34,7 +34,7 @@ def l2_batch(x,A):
     return torch.mean(D*D,dim=(1,2))
 
 def clamp(x):
-    mask = (x > 4.0) + (x < -4.0)
+    mask = (x > 5.0) + (x < -5.0)
     x[mask] = torch.randn_like(x[mask])*2
     return x
 
@@ -47,7 +47,7 @@ if __name__ == '__main__':
     
     parser.add_argument("-t","--time", type=float, default=4, help="Number of seconds to spend finding a good solution (per restart)")
     parser.add_argument("-n","--num_restarts", type=int, default=4, help="Number of times that we try to restart")
-    parser.add_argument("-s","--scale_factor", type=float, default=30, help="to avoid numerical instability")
+    #parser.add_argument("-s","--scale_factor", type=float, default=30, help="to avoid numerical instability")
     
     parser.add_argument("-e","--error", type=str, default="L2", help="either use L1, L2, or smoothL1")
     parser.add_argument("-p","--pop_size", type=int, default=50, help="Population size for diff evo")
@@ -57,7 +57,6 @@ if __name__ == '__main__':
     args = parser.parse_args()
     
     use_cuda = torch.cuda.is_available() if args.try_with_cuda.lower() == "true" else False
-    scale = args.scale_factor
     
     errstr = args.error.lower()
     if errstr == 'l2':
@@ -68,7 +67,11 @@ if __name__ == '__main__':
         error_func = partial(l1_batch,smooth=True)
 
     D = torch.tensor(np.loadtxt(args.matrix, delimiter=" ")).double()
+    
+    scale = D.mean()
+    
     M = D/scale
+    
     A = (M*M)[None]
     
     if use_cuda:
