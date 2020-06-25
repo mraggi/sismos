@@ -9,18 +9,31 @@ import torch.nn as nn
 import argparse
 from functools import partial
 
-def pairwise_dist2_batch(x):
-    x = x.double() # numerical stability
-    xt = x.permute((0,2,1))
-    xy = x@xt
-    
-    sq = (x*x)
-    norms = sq[...,0] + sq[...,1]
+def pairwise_dist_sq(P,Q):
+    # P.shape = (batch, m, 2)
+    # Q.shape = (batch, n, 2)
+    # result.shape = (batch, m, n)
+    P = P[...,None,:] # (batch, m, 1, 2)
+    Q = Q[...,None,:,:] # (batch, 1, n, 2)
+    R = P-Q
+    R *= R
+    return R.sum(dim=-1)
 
-    e = torch.exp(norms)[...,None]
-    eT = e.permute((0,2,1))
-    W = torch.log(e@eT + 1e-14)
-    return W-2*xy
+#def pairwise_dist2_batch(x):
+    #x = x.double() # numerical stability
+    #xt = x.permute((0,2,1))
+    #xy = x@xt
+    
+    #sq = (x*x)
+    #norms = sq[...,0] + sq[...,1]
+
+    #e = torch.exp(norms)[...,None]
+    #eT = e.permute((0,2,1))
+    #W = torch.log(e@eT + 1e-14)
+    #return W-2*xy
+
+def pairwise_dist2_batch(x):
+    return pairwise_dist_sq(x,x)
 
 def l1_batch(x,A,smooth=False):
     D = torch.abs(pairwise_dist2_batch(x)-A)
@@ -47,7 +60,7 @@ if __name__ == '__main__':
     
     parser.add_argument("-t","--time", type=float, default=4, help="Number of seconds to spend finding a good solution (per restart)")
     parser.add_argument("-n","--num_restarts", type=int, default=4, help="Number of times that we try to restart")
-    parser.add_argument("-s","--scale_factor", type=float, default=50, help="to avoid numerical instability")
+    parser.add_argument("-s","--scale_factor", type=float, default=30, help="to avoid numerical instability")
     
     parser.add_argument("-e","--error", type=str, default="L2", help="either use L1, L2, or smoothL1")
     parser.add_argument("-p","--pop_size", type=int, default=50, help="Population size for diff evo")
@@ -67,7 +80,7 @@ if __name__ == '__main__':
     else:
         error_func = partial(l1_batch,smooth=True)
 
-    D = torch.tensor(np.loadtxt(args.matrix, delimiter=" ")).double()
+    D = torch.tensor(np.loadtxt(args.matrix, delimiter=" "))#.double()
     M = D/scale
     A = (M*M)[None]
     
@@ -82,7 +95,7 @@ if __name__ == '__main__':
     
     for epoch in range(args.num_restarts):
         print(f"\n\n Epoch {epoch+1}/{args.num_restarts}:")
-        initial_pop = 2*torch.randn(args.pop_size, A.shape[1], 2).double()
+        initial_pop = 2*torch.randn(args.pop_size, A.shape[1], 2)#.double()
         
         if epoch > 0: initial_pop[0] = best_x
 
