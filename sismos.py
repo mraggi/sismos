@@ -67,7 +67,7 @@ if __name__ == '__main__':
     else:
         error_func = partial(l1_batch,smooth=True)
 
-    D = torch.tensor(np.loadtxt(args.matrix, delimiter=" "))#.double()
+    D = torch.tensor(np.loadtxt(args.matrix, delimiter=" ")).double()
     M = D/scale
     A = (M*M)[None]
     
@@ -82,7 +82,7 @@ if __name__ == '__main__':
     
     for epoch in range(args.num_restarts):
         print(f"\n\n Epoch {epoch+1}/{args.num_restarts}:")
-        initial_pop = 2*torch.randn(args.pop_size, A.shape[1], 2)#.double()
+        initial_pop = 2*torch.randn(args.pop_size, A.shape[1], 2).double()
         
         if epoch > 0: initial_pop[0] = best_x
 
