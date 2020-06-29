@@ -47,7 +47,7 @@ class DifferentialEvolver:
         self.maximize = maximize
     
      
-    def step(self, mut=0.8, crossp=0.7):
+    def step(self, mut=0.8, crossp=0.5):
         A,B,C = self._get_ABC()
         
         mutants = A + mut*(B - C)
@@ -81,7 +81,7 @@ class DifferentialEvolver:
     
 def optimize(f, initial_pop = None, 
                 pop_size=20, dim = (1,), 
-                mut=0.8, crossp=0.7,  
+                mut=0.8, crossp=0.5,  
                 epochs=1000, 
                 proj_to_domain = lambda x : x, 
                 f_for_individuals = False, proj_for_individuals = None, 

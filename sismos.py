@@ -94,7 +94,7 @@ if __name__ == '__main__':
                            initial_pop=initial_pop, 
                            epochs=Timer(args.time), 
                            use_cuda=use_cuda, 
-                           mut=(0.1,0.8),crossp=(0.3,0.9),
+                           mut=(0.1,0.8),crossp=(0.3,0.7),
                            proj_to_domain=clamp,
                            prob_choosing_method='auto')
         

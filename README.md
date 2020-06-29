@@ -1,6 +1,6 @@
 # Distance Matrix to points
 
-Given an approximate distance (symmetric) matrix $D$, produce points in 2d-space for which the pairwise distance matrix matches $D$. This is useful in earthquake analysis, apparently. See the end of this document for a more in-depth explanation of how this works.
+Given an approximate distance (symmetric) matrix, produce points in 2d-space for which the pairwise distance matrix matches the given one. This is useful in earthquake analysis, apparently. For a more in-depth explanation, please see [this](HowItWorks.ipynb) notebook.
 
 ## Install
 
@@ -44,7 +44,3 @@ optional arguments:
   -c TRY_WITH_CUDA, --try_with_cuda TRY_WITH_CUDA
                         Use cuda (if available) (default: false)
 ```
-
-## How it works
-
-Suppose you had a set of points $X$ on the plane, but for which you didn't know the coordinates. You only know the relative pairwise distances. That is, for points $x_i, x_j \in X$, we know an approximation $d_{ij} \approx d(x_i,x_j)$
