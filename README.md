@@ -24,8 +24,8 @@ pip install --user fastprogress
 You need a matrix in a space separated file.
 
 ```
-usage: sismos.py [-h] [-t TIME] [-n NUM_RESTARTS] [-s SCALE_FACTOR] [-e ERROR]
-                 [-p POP_SIZE] [-c TRY_WITH_CUDA]
+usage: sismos.py [-h] [-t TIME] [-n NUM_RESTARTS] [-e ERROR] [-p POP_SIZE]
+                 [-c TRY_WITH_CUDA]
                  matrix
 
 positional arguments:
@@ -34,13 +34,11 @@ positional arguments:
 optional arguments:
   -h, --help            show this help message and exit
   -t TIME, --time TIME  Number of seconds to spend finding a good solution
-                        (per restart) (default: 6)
+                        (per restart) (default: 4)
   -n NUM_RESTARTS, --num_restarts NUM_RESTARTS
-                        Number of times that we try to restart (default: 6)
-  -s SCALE_FACTOR, --scale_factor SCALE_FACTOR
-                        to avoid numerical instability (default: 50)
+                        Number of times that we try to restart (default: 4)
   -e ERROR, --error ERROR
-                        either use l1, smoothl1 or l2 (default: l1)
+                        either use L1, L2, or smoothL1 (default: L2)
   -p POP_SIZE, --pop_size POP_SIZE
                         Population size for diff evo (default: 50)
   -c TRY_WITH_CUDA, --try_with_cuda TRY_WITH_CUDA
