@@ -54,7 +54,7 @@ optional arguments:
                         CUDA. (default: False)
 ```
 
-### Examle usage
+### Example usage
 
 A run could look like this:
 
