@@ -46,18 +46,21 @@ if __name__ == '__main__':
 
     
     
-    parser.add_argument("-t","--time", type=float, default=4, help="Number of seconds to spend finding a good solution (per restart)")
-    parser.add_argument("-n","--num_restarts", type=int, default=4, help="Number of times that we try to restart")
-    #parser.add_argument("-s","--scale_factor", type=float, default=30, help="to avoid numerical instability")
+    parser.add_argument("-t","--time", type=float, default=10, help="Number of seconds to spend finding a good solution (per restart)")
     
     parser.add_argument("-e","--error", type=str, default="L2", help="either use L1, L2, or smoothL1")
-    parser.add_argument("-p","--pop_size", type=int, default=50, help="Population size for diff evo")
     
-    parser.add_argument("-c","--try_with_cuda", type=str, default="false", help="Use cuda (if available)")
+    parser.add_argument("-n","--num_restarts", type=int, default=5, help="Number of times that we try to restart")
+    parser.add_argument("-p","--pop_size", type=int, default=60, help="Population size for diff evo")
+    parser.add_argument("-s","--shuffles", type=int, default=1, help="Number of times populations mix.")
+    
+    parser.add_argument("-d","--disable_cuda", dest='disable_cuda', action='store_true', help="If true, disable CUDA (even when available). If false, use CUDA only if available. Ignored if you don't have CUDA.")
+    
+    parser.set_defaults(disable_cuda=False)
     
     args = parser.parse_args()
     
-    use_cuda = torch.cuda.is_available() if args.try_with_cuda.lower() == "true" else False
+    use_cuda = False if args.disable_cuda else torch.cuda.is_available()
     
     errstr = args.error.lower()
     if errstr == 'l2':
@@ -90,7 +93,7 @@ if __name__ == '__main__':
                         initial_pop=initial_pop, 
                         epochs=Timer(args.time),
                         num_populations=args.num_restarts,
-                        shuffles=args.num_restarts-1,
+                        shuffles=args.shuffles,
                         use_cuda=use_cuda, 
                         mut=(0.1,0.9),crossp=(0.3,0.7),
                         proj_to_domain=clamp,
