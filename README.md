@@ -21,13 +21,16 @@ pip install --user fastprogress
 
 ## Usage
 
-You need a matrix in a space separated file. For example, say your matrix is in a file called `matrix.txt`. Then you could do:
+You need a matrix in a space separated file. For example, say your matrix is in a file called `matrix.txt`. Then just run in a terminal:
 
 ```bash
 python sismos.py matrix.txt
 ```
 
-to use the default settings. The full set of options are described below. See [the bottom of the README](#example-usage) for an example.
+to use the default settings.
+
+### Help
+The full set of options are described below. See [the bottom of the README](#example-usage) for an example.
 
 ```txt
 usage: sismos.py [-h] [-t TIME] [-e ERROR] [-n NUM_RESTARTS] [-p POP_SIZE]

@@ -46,7 +46,7 @@ if __name__ == '__main__':
 
     
     
-    parser.add_argument("-t","--time", type=float, default=10, help="Number of seconds to spend finding a good solution (per restart)")
+    parser.add_argument("-t","--time", type=float, default=16, help="Number of seconds to spend finding a good solution (per restart)")
     
     parser.add_argument("-e","--error", type=str, default="L2", help="either use L1, L2, or smoothL1")
     
