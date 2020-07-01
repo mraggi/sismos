@@ -50,8 +50,8 @@ if __name__ == '__main__':
     
     parser.add_argument("-e","--error", type=str, default="L2", help="either use L1, L2, or smoothL1")
     
-    parser.add_argument("-n","--num_restarts", type=int, default=5, help="Number of times that we try to restart")
-    parser.add_argument("-p","--pop_size", type=int, default=60, help="Population size for diff evo")
+    parser.add_argument("-n","--num_restarts", type=int, default=8, help="Number of times that we try to restart")
+    parser.add_argument("-p","--pop_size", type=int, default=64, help="Population size for diff evo")
     parser.add_argument("-s","--shuffles", type=int, default=1, help="Number of times populations mix.")
     
     parser.add_argument("-d","--disable_cuda", dest='disable_cuda', action='store_true', help="If true, disable CUDA (even when available). If false, use CUDA only if available. Ignored if you don't have CUDA.")
@@ -111,6 +111,8 @@ if __name__ == '__main__':
         
     diff = D - dx
     error = torch.mean(torch.abs(diff)).item()
+    
+    np.set_printoptions(precision=6, suppress=True, linewidth=10000, floatmode='maxprec_equal')
     
     print("Solution found: \n",x.numpy())
     print("\n Distance Matrix: \n", dx.numpy())
