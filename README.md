@@ -64,4 +64,5 @@ A run could look like this:
 ```bash
 python sismos.py matrix.dist.dat --time 60 --error L1 --num_restarts 8 --pop_size 100 --shuffles 2 --disable_cuda
 ```
-The above command runs for 1 minute, uses L1 error instead of L2, and considers 8 populations, each of size 100. Furthermore, after 20 and 40 seconds, it mixes the 8 populations. CUDA is disabled.
+
+The above command runs for 1 minute, uses L1 error instead of L2, and considers 8 populations, each of size 100. Furthermore, after ~20 and ~40 seconds, we mix the 8 populations (for a total of 2 shuffles). CUDA is disabled.
