@@ -84,26 +84,23 @@ if __name__ == '__main__':
     best_x = None
     best_cost = 1e15
     
-    for epoch in range(args.num_restarts):
-        print(f"\n\n Epoch {epoch+1}/{args.num_restarts}:")
-        initial_pop = 2*torch.randn(args.pop_size, A.shape[1], 2).double()
+    initial_pop = 2*torch.randn(args.pop_size*args.num_restarts, A.shape[1], 2).double()
+    
+    loss, x = optimize(lambda x: error_func(x,A), 
+                        initial_pop=initial_pop, 
+                        epochs=Timer(args.time),
+                        num_populations=args.num_restarts,
+                        shuffles=args.num_restarts-1,
+                        use_cuda=use_cuda, 
+                        mut=(0.1,0.9),crossp=(0.3,0.7),
+                        proj_to_domain=clamp,
+                        prob_choosing_method='auto')
+    
+    if loss < best_cost:
+        best_cost = loss
+        best_x = x
         
-        if epoch > 0: initial_pop[0] = best_x
-
-        loss, x = optimize(lambda x: error_func(x,A), 
-                           initial_pop=initial_pop, 
-                           epochs=Timer(args.time), 
-                           use_cuda=use_cuda, 
-                           mut=(0.1,0.8),crossp=(0.3,0.7),
-                           proj_to_domain=clamp,
-                           prob_choosing_method='auto')
-        
-        if loss < best_cost:
-            best_cost = loss
-            best_x = x
-        
-    x = best_x
-    x = x.cpu()
+    x = best_x.cpu()
     dx = torch.sqrt(pairwise_dist2_batch(x[None])).squeeze()
         
     x *= scale
