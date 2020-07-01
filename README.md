@@ -27,7 +27,7 @@ You need a matrix in a space separated file. For example, say your matrix is in 
 python sismos.py matrix.txt
 ```
 
-to use the default settings.
+to use the default settings. The full set of options are described below. See [the bottom of the README](#example-usage) for an example.
 
 ```txt
 usage: sismos.py [-h] [-t TIME] [-e ERROR] [-n NUM_RESTARTS] [-p POP_SIZE]
