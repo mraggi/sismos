@@ -7,14 +7,17 @@ def individual2population(f):
 
 class DifferentialEvolver:
     def __init__(self, f, 
-                       initial_pop = None, 
+                       initial_pop = None, # In next version, I'll remove the option of giving pop_size, dims and num_populations instead of initial_population
                        pop_size=50, dim = (1,), # ignored if initial_pop is given
                        num_populations=1, # If initial_pop is given, then num_populations must divide initial_pop.shape[0]
                        proj_to_domain = lambda x : x, 
                        f_for_individuals = False, proj_for_individuals = None,
                        maximize = False,
                        use_cuda = False,
-                       prob_choosing_method = 'automatic' # either 'randint', 'multinomial' or 'automatic'
+                       prob_choosing_method = 'automatic', # either 'randint', 'multinomial' or 'automatic'
+                       chromosome_replacement_dimension = None # None means that every single number could be replaced independently from others.
+                                                               # 0 means the whole individual is either replaced or not (stupid!)
+                                                               # 1 means every component of the individual is either replaced or not, etc.
                 ):
         
         if isinstance(dim,int): dim = (dim,)
@@ -52,11 +55,20 @@ class DifferentialEvolver:
         else:
             self.idx_prob = get_block_eye(block_size,self.num_populations).to(P)
         
-        self.cost = f(P).squeeze()
-        self.P = P
         self.f = f if not maximize else (lambda x: -f(x)) 
+        self.cost = self.f(P).squeeze()
+        self.P = P
         self.proj_to_domain = proj_to_domain
         self.maximize = maximize
+        
+        self._dims_1 = tuple([self.pop_size] + [1 for _ in self.dim])
+        
+        crp = chromosome_replacement_dimension
+        if crp is None: crp = len(self.dim)
+        self._crossp_dims = tuple([self.pop_size] + [d for d in self.dim[:crp]] + [1 for _ in self.dim[crp:]])
+        
+    def _cross_pollination(self, crossp):
+        return (torch.rand(self._crossp_dims, device=self.P.device) < crossp).to(self.P)
     
     def shuffle(self):
         I = torch.randperm(self.P.shape[0], device=self.P.device)
@@ -68,7 +80,7 @@ class DifferentialEvolver:
         
         mutants = A + mut*(B - C)
         
-        T = (torch.rand_like(self.P) < crossp).to(self.P)
+        T = self._cross_pollination(crossp)
         
         candidates = self.proj_to_domain(T*mutants + (1-T)*self.P)
         f_candidates = self.f(candidates).squeeze()
@@ -78,7 +90,7 @@ class DifferentialEvolver:
         self.cost = torch.where(should_replace,f_candidates,self.cost)
         
         # adjust dimensions for broadcasting
-        S = should_replace.to(self.P).view(self.pop_size,*[1 for _ in self.dim]) 
+        S = should_replace.to(self.P).view(*self._dims_1) 
         
         self.P = S*candidates + (1-S)*self.P
             
@@ -103,7 +115,8 @@ def optimize(f, initial_pop = None,
                 f_for_individuals = False, proj_for_individuals = None, 
                 maximize = False,
                 use_cuda = False,
-                prob_choosing_method = 'automatic'
+                prob_choosing_method = 'automatic',
+                chromosome_replacement_dimension = 1
             ):
     
     if num_populations == 1: shuffles = 0 # no point in shuffling otherwise!!
@@ -117,7 +130,8 @@ def optimize(f, initial_pop = None,
                             proj_for_individuals = proj_for_individuals,
                             maximize=maximize,
                             use_cuda=use_cuda,
-                            prob_choosing_method=prob_choosing_method
+                            prob_choosing_method=prob_choosing_method,
+                            chromosome_replacement_dimension = chromosome_replacement_dimension
                            )
     if isinstance(epochs, int): epochs = range(epochs)
     mut, crossp = tofunc(mut), tofunc(crossp)

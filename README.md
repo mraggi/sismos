@@ -67,3 +67,5 @@ python sismos.py matrix.txt --time 60 --error L1 --num_restarts 8 --pop_size 100
 ```
 
 The above command runs for 1 minute, uses L1 error instead of L2, and considers 8 populations, each of size 100. Furthermore, after ~20 and ~40 seconds, we mix the 8 populations (for a total of 2 shuffles). CUDA is disabled.
+
+This project was supported by PAPIIT IN1169919.
