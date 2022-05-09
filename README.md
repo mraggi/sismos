@@ -1,3 +1,7 @@
+# Interplate slip rate variation between closely spaced earthquakes in southern Mexico: The 2012 Ometepec and 2018 Pinotepa Nacional thrust events
+[![DOI](https://zenodo.org/badge/271279069.svg)](https://zenodo.org/badge/latestdoi/271279069)
+
+
 # Distance Matrix to points
 
 In this repository we provide code to attempt to solve the following problem: Given an approximate distance (symmetric) matrix, produce points in 2d-space for which the pairwise distance matrix matches the given one. This is useful in earthquake analysis, apparently. For a more in-depth explanation, please see [this](HowItWorks.ipynb) notebook.
