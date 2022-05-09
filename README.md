@@ -1,6 +1,6 @@
 # Distance Matrix to points
 
-Given an approximate distance (symmetric) matrix, produce points in 2d-space for which the pairwise distance matrix matches the given one. This is useful in earthquake analysis, apparently. For a more in-depth explanation, please see [this](HowItWorks.ipynb) notebook.
+In this repository we provide code to attempt to solve the following problem: Given an approximate distance (symmetric) matrix, produce points in 2d-space for which the pairwise distance matrix matches the given one. This is useful in earthquake analysis, apparently. For a more in-depth explanation, please see [this](HowItWorks.ipynb) notebook.
 
 ## Install
 
